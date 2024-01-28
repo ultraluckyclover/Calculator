@@ -109,6 +109,19 @@ const BigInt operator+(const BigInt &first, const BigInt &second) {
     return dummy;
 }
 
+// pre-increment
+BigInt BigInt::operator++() {
+    *this += 1;
+    return *this;
+}
+// post-increment
+BigInt BigInt::operator++(int dummy) {
+    BigInt temp;
+    temp = *this;
+    *this += 1;
+    return temp;
+}
+
 BigInt &operator-=(BigInt &first, const BigInt &second) {
     int carry = 0;
     int sub;
@@ -151,6 +164,20 @@ const BigInt operator-(const BigInt &first, const BigInt &second) {
     return dummy;
 }
 
+
+//pre-increment
+BigInt BigInt::operator--() {
+    *this -= 1;
+    return *this;
+}
+ //post-increment
+BigInt BigInt::operator--(int dummy) {
+    BigInt temp;
+    temp = *this;
+    *this -= 1;
+    return temp;
+}
+
 const BigInt operator*(const BigInt &first, const BigInt &second) {
     return BigInt();
 }
@@ -158,6 +185,12 @@ const BigInt operator*(const BigInt &first, const BigInt &second) {
 const BigInt operator/(const BigInt &first, const BigInt &second) {
     return BigInt();
 }
+
+
+
+//int &BigInt::operator[](const int i) const {
+//    return <#initializer#>;
+//}
 
 
 
