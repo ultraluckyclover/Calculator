@@ -20,7 +20,7 @@ ostream &operator<<(ostream &c, const BigInt &b) {
 
 //these constructors take in large numbers and convert them to BigInt objects
 // For all the constructors, I am reading the number passed in backwards
-// ex. BigInt b = "123456789" will give b.digits = "987654321" (in unicode)
+// ex. BigInt b = "123456789" will contain b.digits = "987654321" (in unicode)
 
 BigInt::BigInt(unsigned long long num) {
     digits = "";
@@ -34,7 +34,7 @@ BigInt::BigInt(string &str) {
     digits = "";
     int s = str.size();
     for (int i = s-1; i >=0; i++){
-        digits.push_back(str[i]);
+        digits.push_back(str[i] - '0');
     }
 }
 
@@ -42,11 +42,16 @@ BigInt::BigInt(const char *c) {
     digits = "";
     int s = strlen(c);
     for(int i = s-1; i >= 0; i--){
-        digits.push_back(c[i]);
+        digits.push_back(c[i]-'0');
     }
 }
 
 BigInt::BigInt(BigInt &b) { digits = b.digits; }
+
+BigInt &BigInt::operator=(const BigInt &equal) {
+    digits = equal.digits;
+    return *this;
+}
 
 bool operator>(const BigInt &first, const BigInt &second) {
 
@@ -67,6 +72,32 @@ bool operator>(const BigInt &first, const BigInt &second) {
 bool operator<(const BigInt& first,const BigInt& second){
     // utilizing > operator that I already wrote
     return second > first;
+}
+
+bool operator==(const BigInt &first, const BigInt &second) {
+
+    int f = first.digits.size();
+    int s = second.digits.size();
+
+    if (f != s){ return false; }
+
+    for (int i = 0; i < f; i++){
+        if ( first.digits[i] != second.digits[i] ) { return false; }
+    }
+
+    return true;
+}
+
+bool operator>=(const BigInt &first, const BigInt &second) {
+    if ( first > second || first == second ){ return true; }
+
+    return false;
+}
+
+bool operator<=(const BigInt& first, const BigInt& second) {
+    if (first < second || first == second ){ return true; }
+
+    return false;
 }
 
 BigInt &operator+=(BigInt &first, const BigInt &second) {
@@ -164,7 +195,6 @@ const BigInt operator-(const BigInt &first, const BigInt &second) {
     return dummy;
 }
 
-
 //pre-increment
 BigInt BigInt::operator--() {
     *this -= 1;
@@ -178,13 +208,77 @@ BigInt BigInt::operator--(int dummy) {
     return temp;
 }
 
+BigInt &operator*=(BigInt &first, const BigInt &second) {
+    int f = first.digits.size();
+    int s = second.digits.size();
+    int size = s + f;
+    int carry = 0;
+    int counter = size - 1;
+
+
+    vector<int> product(size,0);
+
+    //multiplication
+
+    for (int i = 0; i < f; i++){
+        for (int j = 0; j < s; j++){
+            product[i+j] += first.digits[i] * second.digits[j];
+        }
+    }
+
+    //carrying so that each int in vector is only one digit
+    for(int i = 0; i < size-1; i++){
+        carry = product[i]/10;
+        product[i] %= 10;
+        product[i+1] += carry;
+    }
+
+    // this is so the above for-loop doesn't exceed the range of the
+    // vector while carrying
+    if(carry > 0){
+        product[size-1] += carry;
+    }
+
+    // changing the first BigInt object to the product
+
+    first.digits.resize(size);
+    for (int i = 0; i < size; i++) {
+        first.digits[i] = product[i];
+    }
+
+    while(counter && !first.digits[counter] ){
+        first.digits.pop_back();
+        counter--;
+    }
+
+    return first;
+}
+
 const BigInt operator*(const BigInt &first, const BigInt &second) {
-    return BigInt();
+    BigInt dummy;
+    dummy = first;
+    dummy *= second;
+    return dummy;
+}
+
+BigInt &operator/=(BigInt &first, const BigInt &second) {
+
 }
 
 const BigInt operator/(const BigInt &first, const BigInt &second) {
     return BigInt();
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 

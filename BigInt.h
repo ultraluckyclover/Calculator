@@ -19,24 +19,37 @@ public:
 
     //int &operator[](const int i) const;
 
-    //operators
+    // ostream operator
+    friend ostream &operator<<(ostream& c, const BigInt& b);
+
+    // direct assignment
+    BigInt &operator=(const BigInt& equal);
+
+    // addition operators
     friend const BigInt operator+(const BigInt& first, const BigInt& second);
     friend BigInt &operator+=(BigInt& first, const BigInt& second);
     BigInt operator++();
     BigInt operator++(int dummy);
 
+    // subtraction operators
     friend const BigInt operator-(const BigInt& first, const BigInt& second);
     friend BigInt &operator-=(BigInt& first, const BigInt& second);
     BigInt operator--();
     BigInt operator--(int dummy);
 
+    // multiplication and division
+    friend BigInt &operator*=(BigInt& first, const BigInt& second);
     friend const BigInt operator*(const BigInt& first, const BigInt& second);
+    friend BigInt &operator/=(BigInt& first, const BigInt& second);
     friend const BigInt operator/(const BigInt& first, const BigInt& second);
 
-    friend ostream &operator<<(ostream& c, const BigInt& b);
-
+    // comparison operators
+    friend bool operator==(const BigInt& first,const BigInt& second);
     friend bool operator>(const BigInt& first,const BigInt& second);
     friend bool operator<(const BigInt& first,const BigInt& second);
+    friend bool operator>=(const BigInt& first, const BigInt& second);
+    friend bool operator<=(const BigInt& first, const BigInt& second);
+
 
 };
 
